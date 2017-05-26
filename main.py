@@ -49,7 +49,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r'/log', MainHandler),
+            (r'/log/', MainHandler),
             (r'/log/tail', EchoWebSocket),
         ]
         settings = {
