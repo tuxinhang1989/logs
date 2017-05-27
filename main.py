@@ -23,17 +23,20 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
     @gen.coroutine
     def on_message(self, message):
         hostname = message
-        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=5)
+        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+                              password=settings.REDIS_PASSWD, db=5)
         key = settings.LOG_KEY.format(server=hostname.strip())
         channel = r.pubsub()
         channel.subscribe(key)
         try:
             while True:
-                line = channel.get_message()
-                if not line:
+                data = channel.get_message()
+                if not data:
                     yield gen.sleep(0.5)
                     continue
-                self.write_message(line.strip())
+                line = data["data"]
+                print line
+                self.write_message(bytes(line))
         except tornado.websocket.WebSocketClosedError as e:
             self.close()
 
@@ -105,7 +108,8 @@ class EchoServer(TCPServer):
     @gen.coroutine
     def handle_stream(self, stream, address):
         print "hello"
-        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=5)
+        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+                              password=settings.REDIS_PASSWD, db=5)
         hostname = yield stream.read_until(b'\n\n')
         key = settings.LOG_KEY.format(server=hostname.strip())
         r.delete(key)
@@ -114,7 +118,7 @@ class EchoServer(TCPServer):
         while True:
             try:
                 data = yield stream.read_until(b'\n')
-                channel.publish(key, data)
+                r.publish(key, data.strip())
             except StreamClosedError:
                 break
 
