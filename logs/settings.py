@@ -11,3 +11,9 @@ REDIS_PORT = "6379"
 REDIS_PASSWD = None
 
 REDIS_EXPIRE = 300
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
