@@ -7,6 +7,7 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 import redis
+import salt.client
 
 from tornado import gen
 from tornado.tcpserver import TCPServer
@@ -14,6 +15,8 @@ from tornado.iostream import StreamClosedError
 
 from logs.utility import get_last_lines
 from logs import settings
+
+FLAG = True
 
 
 class SubWebSocket(tornado.websocket.WebSocketHandler):
@@ -35,12 +38,13 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
                     yield gen.sleep(0.5)
                     continue
                 line = data["data"]
-                print line
                 self.write_message(bytes(line))
         except tornado.websocket.WebSocketClosedError as e:
             self.close()
 
     def on_close(self):
+        global FLAG
+        FLAG = False
         print("closed")
 
 
@@ -65,7 +69,8 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                         continue
                     self.write_message(line.strip())
         except tornado.websocket.WebSocketClosedError as e:
-            self.close()
+            pass
+        self.close()
 
     # def check_origin(self, origin):
     #     print origin, self.request.headers.get("Host")
@@ -115,13 +120,16 @@ class EchoServer(TCPServer):
         r.delete(key)
         channel = r.pubsub()
 
-        while True:
+        while FLAG:
             try:
                 data = yield stream.read_until(b'\n')
                 r.publish(key, data.strip())
             except StreamClosedError:
                 break
-
+        local = salt.client.LocalClient()
+        ret = local.cmd(hostname, "cmd.run", ["kill `ps aux|grep logtail|grep -v grep|awk '{print $2}'`"])
+        print ret.get(hostname)
+        # stream.close()
 
 if __name__ == "__main__":
     app = Application()
