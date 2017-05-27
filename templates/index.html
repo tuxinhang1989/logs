@@ -3,17 +3,22 @@
 <pre id="id-content">
 </pre>
 <input type="hidden" id="id-log" value="{{ log }}" />
+<input type="hidden" id="id-location" value="{{ location }}" />
+<input type="hidden" id="id-hostname" value="{{ hostname }}" />
 <script type="text/javascript" src="{{ static_url('js/jquery-1.11.3.min.js') }}"></script>
 <script type="text/javascript">
     var log_name = $("#id-log").val();
-    var ws = new WebSocket("ws://{{ request.host }}/log/tail");
+    var location = $("#id-location").val();
+    var hostname = $("#id-hostname").val();
+
+    var ws = new WebSocket("ws://{{ request.host }}/log/" + location);
     ws.onopen = function(){
-        console.log(log_name);
-        ws.send(log_name);
+        if (location === "local"){
+            ws.send(log_name);
+        } else {
+            ws.send(hostname);
+        }
     };
-    $("#id-btn").click(function(){
-        ws.send(log_name)
-    })
     ws.onmessage = function(evt){
         $("#id-content").append(evt.data + "\n");
     }

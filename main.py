@@ -6,6 +6,7 @@ import sys
 import tornado.websocket
 import tornado.web
 import tornado.ioloop
+import redis
 
 from tornado import gen
 from tornado.tcpserver import TCPServer
@@ -13,6 +14,31 @@ from tornado.iostream import StreamClosedError
 
 from logs.utility import get_last_lines
 from logs import settings
+
+
+class SubWebSocket(tornado.websocket.WebSocketHandler):
+    def open(self, *args, **kwargs):
+        print("opened")
+
+    @gen.coroutine
+    def on_message(self, message):
+        hostname = message
+        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=5)
+        key = settings.LOG_KEY.format(server=hostname.strip())
+        channel = r.pubsub()
+        channel.subscribe(key)
+        try:
+            while True:
+                line = channel.get_message()
+                if not line:
+                    yield gen.sleep(0.5)
+                    continue
+                self.write_message(line.strip())
+        except tornado.websocket.WebSocketClosedError as e:
+            self.close()
+
+    def on_close(self):
+        print("closed")
 
 
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
@@ -36,7 +62,6 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                         continue
                     self.write_message(line.strip())
         except tornado.websocket.WebSocketClosedError as e:
-            print e
             self.close()
 
     # def check_origin(self, origin):
@@ -52,7 +77,8 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r'/log/', MainHandler),
-            (r'/log/tail', EchoWebSocket),
+            (r'/log/local', EchoWebSocket),
+            (r'/log/remote', SubWebSocket),
         ]
         settings = {
             "debug": True,
@@ -65,26 +91,32 @@ class Application(tornado.web.Application):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         log = self.get_argument("log", None)
-        self.render("index.html", log=log)
+        hostname = self.get_argument("hostname", None)
+        location = self.get_argument("location", "local")
+        context = {
+            "log": log,
+            "hostname": hostname,
+            "location": location,
+        }
+        self.render("index.html", **context)
 
 
 class EchoServer(TCPServer):
     @gen.coroutine
     def handle_stream(self, stream, address):
         print "hello"
+        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=5)
         hostname = yield stream.read_until(b'\n\n')
-        log_path = settings.LOG_PATH.format(server=hostname.strip())
-        if not os.path.isdir(log_path):
-            os.makedirs(log_path)
-        log_name = os.path.join(log_path, settings.LOG_NAME)
+        key = settings.LOG_KEY.format(server=hostname.strip())
+        r.delete(key)
+        channel = r.pubsub()
 
-        with open(log_name, 'w') as f:
-            while True:
-                try:
-                    data = yield stream.read_until(b'\n')
-                    f.write(data)
-                except StreamClosedError:
-                    break
+        while True:
+            try:
+                data = yield stream.read_until(b'\n')
+                channel.publish(key, data)
+            except StreamClosedError:
+                break
 
 
 if __name__ == "__main__":
@@ -93,7 +125,7 @@ if __name__ == "__main__":
         port = 8005
     else:
         port = sys.argv[1]
-    app.listen(port)
+    app.listen(port, "0.0.0.0")
 
     server = EchoServer()
     server.listen(8080)
