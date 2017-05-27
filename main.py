@@ -2,13 +2,17 @@
 from __future__ import unicode_literals, absolute_import
 
 import os
+import sys
 import tornado.websocket
 import tornado.web
 import tornado.ioloop
 
 from tornado import gen
+from tornado.tcpserver import TCPServer
+from tornado.iostream import StreamClosedError
 
-import log_tail
+from logs.utility import get_last_lines
+from logs import settings
 
 
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
@@ -19,11 +23,9 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         log = message
         print "log file: ", log
-        for line in log_tail.get_last_lines(log):
-            self.write_message(line)
 
         try:
-            for line in log_tail.get_last_lines(log):
+            for line in get_last_lines(log):
                 self.write_message(line)
             with open(log, 'r') as f:
                 f.seek(0, 2)
@@ -66,8 +68,34 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("index.html", log=log)
 
 
+class EchoServer(TCPServer):
+    @gen.coroutine
+    def handle_stream(self, stream, address):
+        print "hello"
+        hostname = yield stream.read_until(b'\n\n')
+        log_path = settings.LOG_PATH.format(server=hostname.strip())
+        if not os.path.isdir(log_path):
+            os.makedirs(log_path)
+        log_name = os.path.join(log_path, settings.LOG_NAME)
+
+        with open(log_name, 'w') as f:
+            while True:
+                try:
+                    data = yield stream.read_until(b'\n')
+                    f.write(data)
+                except StreamClosedError:
+                    break
+
+
 if __name__ == "__main__":
     app = Application()
-    app.listen(8005)
-    tornado.ioloop.IOLoop.instance().start()
+    if len(sys.argv) < 2:
+        port = 8005
+    else:
+        port = sys.argv[1]
+    app.listen(port)
 
+    server = EchoServer()
+    server.listen(8080)
+
+    tornado.ioloop.IOLoop.instance().start()
