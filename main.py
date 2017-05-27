@@ -92,11 +92,11 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         log = self.get_argument("log", None)
         hostname = self.get_argument("hostname", None)
-        location = self.get_argument("location", "local")
+        type = self.get_argument("type", "local")
         context = {
             "log": log,
             "hostname": hostname,
-            "location": location,
+            "type": type,
         }
         self.render("index.html", **context)
 

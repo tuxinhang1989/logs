@@ -3,17 +3,17 @@
 <pre id="id-content">
 </pre>
 <input type="hidden" id="id-log" value="{{ log }}" />
-<input type="hidden" id="id-location" value="{{ location }}" />
+<input type="hidden" id="id-type" value="{{ type }}" />
 <input type="hidden" id="id-hostname" value="{{ hostname }}" />
 <script type="text/javascript" src="{{ static_url('js/jquery-1.11.3.min.js') }}"></script>
 <script type="text/javascript">
     var log_name = $("#id-log").val();
-    var location = $("#id-location").val();
+    var type = $("#id-type").val();
     var hostname = $("#id-hostname").val();
 
-    var ws = new WebSocket("ws://{{ request.host }}/log/" + location);
+    var ws = new WebSocket("ws://{{ request.host }}/log/" + type);
     ws.onopen = function(){
-        if (location === "local"){
+        if (type === "local"){
             ws.send(log_name);
         } else {
             ws.send(hostname);
