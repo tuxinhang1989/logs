@@ -10,8 +10,6 @@ import redis
 import salt.client
 
 from tornado import gen
-from tornado.tcpserver import TCPServer
-from tornado.iostream import StreamClosedError
 
 from logs.utility import get_last_lines
 from logs import settings
@@ -109,27 +107,6 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("index.html", **context)
 
 
-class EchoServer(TCPServer):
-    @gen.coroutine
-    def handle_stream(self, stream, address):
-        print "hello"
-        r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
-                              password=settings.REDIS_PASSWD, db=5)
-        hostname = yield stream.read_until(b'\n\n')
-        key = settings.LOG_KEY.format(server=hostname.strip())
-        r.delete(key)
-        channel = r.pubsub()
-
-        while FLAG:
-            try:
-                data = yield stream.read_until(b'\n')
-                r.publish(key, data.strip())
-            except StreamClosedError:
-                import traceback
-                traceback.print_exc()
-                break
-        # stream.close()
-
 if __name__ == "__main__":
     app = Application()
     if len(sys.argv) < 2:
@@ -138,7 +115,5 @@ if __name__ == "__main__":
         port = sys.argv[1]
     app.listen(port, "0.0.0.0")
 
-    server = EchoServer()
-    server.listen(8080)
-
     tornado.ioloop.IOLoop.instance().start()
+
