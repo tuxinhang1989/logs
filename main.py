@@ -125,10 +125,9 @@ class EchoServer(TCPServer):
                 data = yield stream.read_until(b'\n')
                 r.publish(key, data.strip())
             except StreamClosedError:
+                import traceback
+                traceback.print_exc()
                 break
-        local = salt.client.LocalClient()
-        ret = local.cmd(hostname, "cmd.run", ["kill `ps aux|grep logtail|grep -v grep|awk '{print $2}'`"])
-        print ret.get(hostname)
         # stream.close()
 
 if __name__ == "__main__":
