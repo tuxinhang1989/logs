@@ -1,7 +1,9 @@
 <html>
 <body>
+<a id="id-click" href="#bottom">click me</a>
 <pre id="id-content">
 </pre>
+<div id="id-bottom"></div>
 <input type="hidden" id="id-log" value="{{ log }}" />
 <input type="hidden" id="id-type" value="{{ type }}" />
 <input type="hidden" id="id-hostname" value="{{ hostname }}" />
@@ -21,6 +23,7 @@
     };
     ws.onmessage = function(evt){
         $("#id-content").append(evt.data + "\n");
+        document.getElementById("id-bottom").scrollIntoView()
     }
 </script>
 </body>
