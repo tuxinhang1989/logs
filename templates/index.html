@@ -6,6 +6,8 @@
 <input type="hidden" id="id-log" value="{{ log }}" />
 <input type="hidden" id="id-type" value="{{ type }}" />
 <input type="hidden" id="id-hostname" value="{{ hostname }}" />
+<button type="button" id="id-stop">Stop</button>
+<button type="button" id="id-start">Start</button>
 <script type="text/javascript" src="{{ static_url('js/jquery-1.11.3.min.js') }}"></script>
 <script type="text/javascript">
     var log_name = $("#id-log").val();
@@ -20,10 +22,18 @@
             ws.send(hostname);
         }
     };
-    ws.onmessage = function(evt){
+
+    var get_message = function(evt){
         $("#id-content").append(evt.data + "\n");
         document.getElementById("id-bottom").scrollIntoView()
-    }
+    };
+    ws.onmessage = get_message;
+    $("#id-stop").click(function(){
+        ws.onmessage = function(){};
+    })
+    $("#id-start").click(function(){
+        ws.onmessage = get_message;
+    })
 </script>
 </body>
 </html>
