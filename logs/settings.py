@@ -12,7 +12,7 @@ REDIS_PASSWD = None
 
 REDIS_EXPIRE = 300
 
-KYLIN_HOST = "kylin-dev.niwodai.net"
+KYLIN_HOST = "192.168.66.105:8000"
 SERVER_UPDATE_URL = "/cmdb/servers/api/v1/"
 UPDATE_INTERVAL = 60 * 60 * 1000
 
@@ -20,4 +20,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
