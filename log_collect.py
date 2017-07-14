@@ -32,10 +32,7 @@ class EchoServer(TCPServer):
                 r.publish(key, data.strip())
             except StreamClosedError:
                 print "stream closed"
-                import traceback
-                traceback.print_exc()
                 break
-        # stream.close()
 
 
 def update_server():
@@ -51,7 +48,7 @@ def update_server():
 if __name__ == "__main__":
     server = EchoServer()
     server.listen(8080)
-    pc = PeriodicCallback(update_server, settings.UPDATE_INTERVAL)
-    pc.start()
+    # pc = PeriodicCallback(update_server, settings.UPDATE_INTERVAL)
+    # pc.start()
 
     tornado.ioloop.IOLoop.instance().start()

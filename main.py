@@ -7,7 +7,6 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 import redis
-import salt.client
 
 from tornado import gen
 
@@ -33,11 +32,12 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
             while True:
                 data = channel.get_message()
                 if not data:
-                    yield gen.sleep(0.5)
+                    yield gen.sleep(0.1)
                     continue
-                line = data["data"]
-                self.write_message(bytes(line))
-        except tornado.websocket.WebSocketClosedError as e:
+                if data["type"] == "message":
+                    line = data["data"]
+                    self.write_message(bytes(line))
+        except tornado.websocket.WebSocketClosedError:
             self.close()
 
     def on_close(self):
@@ -56,19 +56,17 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         print "log file: ", log
 
         try:
-            for line in get_last_lines(log):
-                self.write_message(line)
             with open(log, 'r') as f:
-                f.seek(0, 2)
+                for line in get_last_lines(f):
+                    self.write_message(line)
                 while True:
                     line = f.readline()
                     if not line:
-                        yield gen.sleep(0.5)
+                        yield gen.sleep(0.1)
                         continue
                     self.write_message(line.strip())
-        except tornado.websocket.WebSocketClosedError as e:
-            pass
-        self.close()
+        except tornado.websocket.WebSocketClosedError:
+            self.close()
 
     # def check_origin(self, origin):
     #     print origin, self.request.headers.get("Host")
