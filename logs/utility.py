@@ -3,8 +3,10 @@ from __future__ import unicode_literals, division
 
 import math
 
+from logs import settings
 
-def get_last_lines(f, num=10):
+
+def get_last_lines(f, num=settings.TAIL_LINE_NUM):
     size = 1000
     try:
         f.seek(-size, 2)
