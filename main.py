@@ -32,7 +32,7 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
             while True:
                 data = channel.get_message()
                 if not data:
-                    yield gen.sleep(0.1)
+                    yield gen.sleep(0.05)
                     continue
                 if data["type"] == "message":
                     line = data["data"]
@@ -62,7 +62,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                 while True:
                     line = f.readline()
                     if not line:
-                        yield gen.sleep(0.1)
+                        yield gen.sleep(0.05)
                         continue
                     self.write_message(line.strip())
         except tornado.websocket.WebSocketClosedError:
