@@ -7,6 +7,7 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 import redis
+import salt.client
 
 from tornado import gen
 
@@ -22,12 +23,14 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
 
     @gen.coroutine
     def on_message(self, message):
-        hostname = message
+        hostname, log_path, cmd = message.split("||")
+        local = salt.client.LocalClient()
         r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
                               password=settings.REDIS_PASSWD, db=5)
-        key = settings.LOG_KEY.format(server=hostname.strip())
+        key = settings.LOG_KEY.format(server=hostname.strip(), log_path=log_path.strip())
         channel = r.pubsub()
         channel.subscribe(key)
+        local.cmd_async(hostname, "cmd.run", [cmd])
         try:
             while True:
                 data = channel.get_message()
@@ -97,10 +100,12 @@ class MainHandler(tornado.web.RequestHandler):
         log = self.get_argument("log", None)
         hostname = self.get_argument("hostname", None)
         type = self.get_argument("type", "local")
+        cmd = self.get_argument("cmd", "")
         context = {
             "log": log,
             "hostname": hostname,
             "type": type,
+            "cmd": cmd,
         }
         self.render("index.html", **context)
 

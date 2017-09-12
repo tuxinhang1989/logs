@@ -6,6 +6,7 @@
 <input type="hidden" id="id-log" value="{{ log }}" />
 <input type="hidden" id="id-type" value="{{ type }}" />
 <input type="hidden" id="id-hostname" value="{{ hostname }}" />
+<input type="hidden" id="id-cmd" value="{{ cmd }}" />
 <button type="button" id="id-stop">Stop</button>
 <button type="button" id="id-start">Start</button>
 <script type="text/javascript" src="{{ static_url('js/jquery-1.11.3.min.js') }}"></script>
@@ -13,13 +14,14 @@
     var log_name = $("#id-log").val();
     var type = $("#id-type").val();
     var hostname = $("#id-hostname").val();
+    var cmd = $("#id-cmd").val();
 
     var ws = new WebSocket("ws://{{ request.host }}/log/" + type);
     ws.onopen = function(){
         if (type === "local"){
             ws.send(log_name);
         } else {
-            ws.send(hostname);
+            ws.send(hostname + "||" + log_name + "||" + cmd);
         }
     };
 

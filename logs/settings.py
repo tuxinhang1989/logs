@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-LOG_KEY = "logs:catalina:{server}"
+LOG_KEY = "logs:{server}:{log_path}"
 
 LOG_NAME = "catalina.out"
-TAIL_LINE_NUM = 10
+TAIL_LINE_NUM = 20
 
 REDIS_HOST = "127.0.0.1"
 REDIS_PORT = "6379"
