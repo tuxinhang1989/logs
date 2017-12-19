@@ -38,8 +38,8 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
                     yield gen.sleep(0.05)
                     continue
                 if data["type"] == "message":
-                    line = data["data"]
-                    self.write_message(bytes(line))
+                    line = format_line(data["data"])
+                    self.write_message(line)
         except tornado.websocket.WebSocketClosedError:
             self.close()
 

@@ -1,0 +1,281 @@
+html {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+/*html,
+body {
+    height: 100%;
+}*/
+
+
+body {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", "微软雅黑", "WenQuanYi Micro Hei", Arial, sans-serif !important;
+    line-height: 1.5;
+    font-size: 12px;
+    color: #777;
+    /*background-color: #ecf0f5;*/
+    /*background-color: #f5f5f5;*/
+    background-color: #fff;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.logout {
+    text-align: right;
+    margin: 10px;
+}
+
+.logout a {
+    color: #666;
+}
+
+.header {
+    margin: 20px 10px 20px 10px;
+    text-align: center;
+}
+
+/*.header img{
+    float: left;
+}*/
+
+.header h1{
+    line-height: 30px;
+    margin: 0;
+    font-size: 14px;
+}
+
+
+.login-form {
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+
+.login-form input {
+    margin-bottom: 5px;
+    position: relative;
+    display: inline-block;
+    padding: 4px 7px;
+    width: 95%;
+    height: 28px;
+    cursor: text;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+
+}
+
+
+.login-form input:hover {
+    border-color: #57c5f7;
+}
+
+.login-form input:focus {
+    border-color: #57c5f7;
+    outline: 0;
+    box-shadow: 0 0 0 2px #d5f1fd;
+}
+
+
+
+.login-form button {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    line-height: 1.5;
+    padding: 4px 15px;
+    font-size: 12px;
+    border-radius: 6px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    color: #fff;
+    background-color: #2db7f5;
+    border-color: #2db7f5;
+
+    padding: 4px 15px 5px 15px;
+    font-size: 14px;
+    outline: 0
+}
+
+.login-form button:hover {
+    color: #fff;
+    background-color: #57c5f7;
+    border-color: #57c5f7
+}
+
+.login-form button:active,.login-form button.active {
+    color: #f2f2f2;
+    background-color: #2baee9;
+    border-color: #2baee9
+}
+
+.login-form button:active,.login-form button.active {
+    background-image: none
+}
+
+.login-form button:hover,.login-form button:active,.login-form button.active {
+    color: #fff
+}
+
+
+input.captcha {
+    width: 40%;
+    float: left;
+    margin-right: 10px;
+}
+
+
+.captcha-img {
+    display: inline-block;
+    float: left;
+    /*height: 46px;*/
+}
+
+.form-group {
+    clear: both;
+    /*margin: 0 auto;*/
+}
+
+ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ol li {
+    padding: 0;
+    margin: 0;
+}
+
+
+.msg {
+    padding: 5px 10px 10px 10px;
+    margin: 10px 0;
+}
+
+
+.msg-item {
+    background: #fff;
+    /*border-radius: 3px;*/
+    border-radius: 6px;
+    /*box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);*/
+    box-shadow: 0 0 4px #d9d9d9;
+    color: #444;
+    margin-top: 5px;
+    padding: 0;
+    position: relative;
+    line-height: 1.5;
+
+    -webkit-animation-duration: 0.5s !important;
+}
+
+
+.time {
+    color: #999;
+    float: right;
+    font-size: 12px;
+    padding: 10px;
+}
+
+.msg-header {
+    border-bottom: 1px solid #f4f4f4;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.1;
+    margin: 0;
+    padding: 10px;
+}
+/*.no-border {
+    border: 0 none !important;
+}*/
+
+
+.msg-body {
+    padding: 10px;
+}
+
+.msg-footer {
+    padding: 10px;
+}
+
+
+
+
+li.unread {
+    border: 1px solid #ffe0cc;
+    background-color: #fff0e6;
+    /*color: #f56954;*/
+}
+
+li.read {
+    border: 1px solid #e7f6e1;
+    background-color: #f3faf0;
+}
+
+
+.label-info {
+    background-color: #00c0ef !important;
+}
+
+.label-info {
+    color: #fff !important;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    /*border-radius: .25em;*/
+    border-radius: 4px;
+}
+
+.time-label {
+
+}
+
+.read-status {
+    margin: 10px 5px 10px 0;
+}
+
+
+.no-msg {
+    padding: 100px;
+    margin: 10px 0;
+    border: 1px solid #d5f1fd;
+    background-color: #eaf8fe;
+    text-align: center;
+}
+
+.login-btn {
+    width: 100%;
+    margin-top: 10px;
+}

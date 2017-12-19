@@ -1,0 +1,78 @@
+/*数据库管理*/
+.database_num{padding:15px 20px;background-color:#fff;}
+
+/*.database_num ul{border:1px solid #d8d8d8;}*/
+.database_num ul li{float:left;width:16.66%;padding:15px 20px;/*border-right:1px solid #d8d8d8;*/font-size:14px;color:#333;border:1px solid #d8d8d8;border-right:0;}
+.database_num ul li:last-child{border-right:1px solid #d8d8d8;}
+.database_num ul li span{display:inline-block;text-align:center;}
+.database_num ul li span img{display:block;width:28px;margin:0 auto;margin-bottom:10px;}
+.database_num ul li b{float:right;font-size:30px;color:#666;font-weight:normal;padding-top:20px;}
+.br{border-right:1px solid #d8d8d8!important;}
+
+/*主页*/
+.charts{padding:0 20px;padding-top:20px;background:#fff;}
+.charts ul li{width:50%;float:left;margin-bottom:50px;position:relative;}
+.charts ul li span{height:50px;line-height:50px;display:block;font-size:16px;color:#333;background-position:left center;background-repeat:no-repeat;padding-left:65px;}
+.memory{background-image:url(../img/memory.png);}
+.cpu{background-image:url(../img/cpu.png);}
+.service{background-image:url(../img/service.png);}
+.network{background-image:url(../img/netword.png);}
+.charts .tab_action{position:absolute;right:50px;top:13px;}
+
+/*数据视图弹窗*/
+.dataView{width:400px;height:180px;border:1px solid #d8d8d8;position:absolute;right:50px;top:45px;z-index:100;background:#fff;border-radius:3px;-webkit-border-radius:3px;padding:25px;overflow:auto;display:none;}
+.dataView h4{margin-bottom:10px;font-size:15px;}
+.dataView dl dd{font-size:14px;margin-bottom:5px;}
+.dataView dl dd label{margin-left:15px;display:inline-block;}
+
+/*.red{color:#ff0000;font-style:normal;vertical-align:middle;margin-left:3px}*/
+
+/*包管理*/
+.alert_con .ver_name{width:450px;text-align:center;color:#999;padding-top:5px;}
+.log_con{background-color:#fff;padding:0 20px 20px 20px;}
+.back_itm{padding:20px 0;}
+.back_itm a{font-size:14px;color:#666;}
+.back_icon{top:-2px;width:28px;height:28px;background-position:-60px -60px;}
+.log_con .btns_big{border-top:0;text-align:left;padding-left:0;padding-top:0;}
+.btns_big .stop_btn{background-color:#ff6666;border:1px solid #fd5252;}
+.log_info p{word-break:break-all;font-size:14px;color:#666;line-height:26px;}
+
+/* 包和主机配置 jinmeng*/
+.tab_con .btns_big{padding:0;text-align:left;border-top:0;float:left;}
+
+/*故障自愈-历史记录*/
+.count_box{padding:20px;background-color:#f5f5f5;border-top:1px solid #d8d8d8;border-bottom:1px solid #d8d8d8;}
+.count_box input[type=text]{width:330px;height:35px;background-color:#fff;border:1px solid #ffa63c;-webkit-border-radius:3px;-moz-border-radius:3px;-o-border-radius:3px;border-radius:3px;padding:3px 5px;margin-right:10px;}
+.count_box input[type=button]{height:35px;-webkit-border-radius:3px;-moz-border-radius:3px;-o-border-radius:3px;border-radius:3px;color:#fff;padding:0 15px 0 35px;background:#ffa63c url(../img/count_ico.png) no-repeat 9px center;cursor:pointer;}
+.count_box input[type=button]:hover{filter:alpha(opacity:80);-moz-opacity:0.8;-khtml-opacity:0.8;opacity:0.8;}
+.chart_con{padding:20px;background-color:#fff;}
+.chart_box{border:1px solid #d8d8d8;-webkit-border-radius:3px;-moz-border-radius:3px;-o-border-radius:3px;border-radius:3px;margin-bottom:20px;}
+.chart_box h3{height:40px;line-height:40px;background-color:#ececec;color:#333;padding-left:20px;border-bottom:1px solid #d8d8d8;}
+.chart_box h3 i{position:relative;top:-1px;width:17px;height:16px;background-position:-60px -90px;}
+
+/*更新数据源*/
+.tab_action_bg{text-align:right;padding:0 0 15px 0;}
+.tab_action_bg a{	/*width: 130px;*/
+margin-left:5px;}
+.tab_action_bg a:hover{filter:alpha(opacity:80);-moz-opacity:0.8;-khtml-opacity:0.8;opacity:0.8;}
+.tab_action_bg .cover{height:30px;line-height:30px;}
+/*.add_ora_alert .query_bar,.add_pg_alert .query_bar,.add_source2_alert .query_bar{width:600px;}*/
+.add_source1_alert .query_bar span label{width:110px;}
+.add_source2_alert .query_bar span label{width:260px;}
+.add_pg_alert .query_bar span label{width:200px;}
+.add_ora_alert .query_bar span label{width:200px;}
+
+/*数据库管理备份管理*/
+.database_tab{background-color:#fff;padding:20px 0 0px 20px;margin-bottom:35px;}
+.database_tab div{border-bottom:1px solid #d8d8d8;}
+.database_tab a{display:inline-block;vertical-align:middle;color:#666;font-size:13px;height:35px;line-height:35px;padding:0 15px;background-color:#e5e5e5;margin-right:5px;}
+.database_tab a.cur{background-color:#45a2ff;color:#fff;}
+.database_special ul li span img{width:55px;}
+.database_box{display:none;}
+.database_box01{display:block;}
+
+/*ztree样式*/
+.tree_box{padding:20px 20px 0 20px;}
+.pb10{padding-bottom:10px!important;}
+.tree_box label{display:inline-block;width:100px;text-align:right;font-size:14px;color:#333;}
+.tree_box .ztree{margin-left:105px;margin-top:-24px;height:400px;overflow:auto;margin-bottom:25px;}

@@ -1,0 +1,135 @@
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", "微软雅黑", "WenQuanYi Micro Hei", Arial, sans-serif !important;
+    /*background-color: #689;*/
+    background-color: #689;
+    color: #333;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main {
+    background-color: #fff;
+    border-radius: 4px;
+    /*margin-top: 150px;*/
+    padding: 25px;
+    max-width: 320px;
+}
+
+h1 {
+    font-size: 22px;
+    margin: 0 0 10px;
+    text-align: center;
+}
+
+form {
+    margin: 0;
+}
+
+input {
+    -moz-appearance: none;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 15px;
+    height: 38px;
+    margin: 10px 0 0 0;
+    padding: 8px 10px;
+    width: 100%;
+}
+
+input:focus {
+    border-color: #9bc;
+}
+
+input[name=captcha] {
+    float: left;
+    width: 50%;
+}
+
+.captcha-refresh {
+    float: left;
+    /*display: inline-block;*/
+    margin: 10px 0 0 10px;
+    height: 38px;
+}
+
+button {
+    margin: 10px 0 0 0;
+    border: none;
+    outline: 0 !important;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1.33333;
+    padding: 10px 16px;
+    background-color: #337ab7;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+}
+
+button:hover {
+    background-color: #356;
+}
+
+.center-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    overflow: auto;
+}
+
+.center-container:after,
+.center-block {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.center-container:after {
+    content: '';
+    height: 100%;
+    margin-left: -0.25em;
+}
+
+.center-block {
+    /*max-width: 98%;*/
+}
+
+.errorlist {
+    margin: 10px 0 0 0;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+    list-style-type:none;
+}
+
+.info-links {
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.info-links a {
+    color: #999;
+}
+
+.info-links a:hover {
+    color: #eee;
+}
