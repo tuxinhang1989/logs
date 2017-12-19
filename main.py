@@ -53,15 +53,15 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
 def format_line(line):
     line = to_unicode(line)
     if "INFO" in line:
-        color = "blue"
+        color = "#46A3FF"
     elif "WARN" in line:
-        color = "yellow"
+        color = "#FFFF37"
     elif "ERROR" in line:
         color = "red"
     elif "CRITICAL" in line:
         color = "red"
     else:
-        color = "black"
+        color = "#FFFFFF"
 
     return "<span style='color:{}'>{}</span>".format(color, line)
 
