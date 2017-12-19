@@ -10,6 +10,7 @@ import redis
 import salt.client
 
 from tornado import gen
+from tornado.escape import to_unicode
 
 from logs.utility import get_last_lines
 from logs import settings
@@ -49,6 +50,22 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
         print("closed")
 
 
+def format_line(line):
+    line = to_unicode(line)
+    if "INFO" in line:
+        color = "blue"
+    elif "WARN" in line:
+        color = "yellow"
+    elif "ERROR" in line:
+        color = "red"
+    elif "CRITICAL" in line:
+        color = "red"
+    else:
+        color = "black"
+
+    return "<span style='color:{}'>{}</span>".format(color, line)
+
+
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print("WebSocket opened")
@@ -61,14 +78,16 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         try:
             with open(log, 'r') as f:
                 for line in get_last_lines(f):
-                    self.write_message(line)
+                    line1 = format_line(line)
+                    self.write_message(line1)
                 while True:
                     line = f.readline()
                     if not line:
                         yield gen.sleep(0.05)
                         continue
-                    self.write_message(line.strip())
-        except tornado.websocket.WebSocketClosedError:
+                    self.write_message(format_line(line.strip()))
+        except tornado.websocket.WebSocketClosedError as e:
+            print e
             self.close()
 
     # def check_origin(self, origin):

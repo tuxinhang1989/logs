@@ -1,14 +1,22 @@
 <html>
+<head>
+<link href="{{ static_url('public/css/public.css') }}" rel="stylesheet" />
+<link href="{{ static_url('kylin/css/style.css') }}" rel="stylesheet" />
+</head>
 <body>
-<pre id="id-content">
-</pre>
-<div id="id-bottom"></div>
-<input type="hidden" id="id-log" value="{{ log }}" />
-<input type="hidden" id="id-type" value="{{ type }}" />
-<input type="hidden" id="id-hostname" value="{{ hostname }}" />
-<input type="hidden" id="id-cmd" value="{{ cmd }}" />
-<button type="button" id="id-stop">Stop</button>
-<button type="button" id="id-start">Start</button>
+<div class="page" style="margin-left:10px;">
+    <pre id="id-content">
+    </pre>
+    <div id="id-bottom"></div>
+    <input type="hidden" id="id-log" value="{{ log }}" />
+    <input type="hidden" id="id-type" value="{{ type }}" />
+    <input type="hidden" id="id-hostname" value="{{ hostname }}" />
+    <input type="hidden" id="id-cmd" value="{{ cmd }}" />
+    <div class="btns btns_big">
+        <button type="button" class="query_btn cancle" id="id-stop">Stop</button>
+        <button type="button" class="query_btn commit" id="id-start">Start</button>
+    </div>
+</div>
 <script type="text/javascript" src="{{ static_url('js/jquery-1.11.3.min.js') }}"></script>
 <script type="text/javascript">
     var log_name = $("#id-log").val();
