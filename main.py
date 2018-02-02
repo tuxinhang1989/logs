@@ -97,21 +97,20 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         log = message
         print "log file: ", log
+        if not os.path.isfile(log):
+            self.write_message("file not exists")
+            return
 
-        try:
-            with open(log, 'r') as f:
-                for line in get_last_lines(f):
-                    line1 = format_line(line)
-                    self.write_message(line1)
-                while True:
-                    line = f.readline()
-                    if not line:
-                        yield gen.sleep(0.05)
-                        continue
-                    self.write_message(format_line(line.strip()))
-        except tornado.websocket.WebSocketClosedError as e:
-            print e
-            self.close()
+        with open(log, 'r') as f:
+            for line in get_last_lines(f):
+                line1 = format_line(line)
+                self.write_message(line1)
+            while self.ws_connection:
+                line = f.readline()
+                if not line:
+                    yield gen.sleep(0.05)
+                    continue
+                self.write_message(format_line(line.strip()))
 
     # def check_origin(self, origin):
     #     print origin, self.request.headers.get("Host")
