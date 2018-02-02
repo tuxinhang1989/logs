@@ -6,8 +6,8 @@ import sys
 import tornado.websocket
 import tornado.web
 import tornado.ioloop
-import salt.client
 
+from salt.client import get_local_client
 from collections import defaultdict
 from tornado import gen
 from tornado.escape import to_unicode
@@ -30,9 +30,9 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
 
     @gen.coroutine
     def on_message(self, message):
+        local = get_local_client(io_loop=tornado.ioloop.IOLoop.instance())
         hostname, log_path, cmd = message.split("||")
         cmd = self.assemble_cmd(log_path, cmd)
-        local = salt.client.LocalClient()
         channel = settings.LOG_KEY.format(
                 server=hostname.strip(), log_path=log_path.strip())
         self.register(channel)
