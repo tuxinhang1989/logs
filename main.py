@@ -3,25 +3,29 @@ from __future__ import unicode_literals, absolute_import
 
 import os
 import sys
+import redis
 import tornado.websocket
 import tornado.web
 import tornado.ioloop
 
+from redis.client import PubSub
 from salt.client import get_local_client
-from collections import defaultdict
 from tornado import gen
 from tornado.escape import to_unicode
 
-from logs.utility import get_last_lines, get_pubsub
+from logs.utility import get_last_lines
 from logs import settings
 
-pubsub = get_pubsub()
+REDIS_CONNECTION_POOL = redis.ConnectionPool(
+    host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+    password=settings.REDIS_PASSWD, db=5
+)
 
 
 class SubWebSocket(tornado.websocket.WebSocketHandler):
-    client_map = defaultdict(dict)
-
     def open(self, *args, **kwargs):
+        self.pubsub = PubSub(REDIS_CONNECTION_POOL, ignore_subscribe_messages=True)
+        self.client = self.request.connection.context.address
         print("opened")
 
     def assemble_cmd(self, log_path, cmd):
@@ -33,43 +37,27 @@ class SubWebSocket(tornado.websocket.WebSocketHandler):
         local = get_local_client(io_loop=tornado.ioloop.IOLoop.instance())
         hostname, log_path, cmd = message.split("||")
         cmd = self.assemble_cmd(log_path, cmd)
-        channel = settings.LOG_KEY.format(
+        self.channel = settings.LOG_KEY.format(
                 server=hostname.strip(), log_path=log_path.strip())
-        self.register(channel)
-        if channel not in pubsub.channels:
-            pubsub.subscribe(**{channel: SubWebSocket.channel_callback})
+        self.pubsub.subscribe(**{self.channel: self.channel_callback})
         local.cmd_async(hostname, "cmd.run", [cmd])
-        while True:
-            if not pubsub.connection.can_read(timeout=0):
+        while self.pubsub.subscribed:
+            if not self.pubsub.connection.can_read(timeout=0):
                 yield gen.sleep(0.05)
             else:
-                pubsub.get_message()
+                self.pubsub.get_message()
+        self.pubsub.close()
+        print 'pubsub closed'
 
-    @classmethod
-    def channel_callback(cls, message):
-        for client, callback in SubWebSocket.client_map[message["channel"]].iteritems():
-            # print("sending message to %s:%s" % client)
-            callback(message)
-
-    def client_callback(self, message):
+    def channel_callback(self, message):
         line = format_line(message["data"])
         try:
             self.write_message(line)
         except tornado.websocket.WebSocketClosedError:
-            self.unregister(message["channel"])
-
-    def register(self, channel):
-        client = self.request.connection.context.address
-        SubWebSocket.client_map[channel][client] = self.client_callback
-
-    def unregister(self, channel):
-        client = self.request.connection.context.address
-        SubWebSocket.client_map[channel].pop(client, None)
-        if not SubWebSocket.client_map[channel]:
-            SubWebSocket.client_map.pop(channel, None)
-            pubsub.unsubscribe(channel)
+            self.pubsub.unsubscribe(self.channel)
 
     def on_close(self):
+        self.pubsub.unsubscribe(self.channel)
         print("closed")
 
 
